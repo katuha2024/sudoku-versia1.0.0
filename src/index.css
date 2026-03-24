@@ -1,0 +1,64 @@
+:root {
+  --bg-color: #1e1e1e;
+  --neon-mint: #99f6e4;
+  --text-white: #ffffff;
+  --glow: 0 0 10px rgba(153, 246, 228, 0.4);
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-color); /* Ось тут магія темного фону */
+  color: var(--text-white);
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.neon-title {
+  color: var(--neon-mint);
+  text-shadow: var(--glow);
+  text-align: center;
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 45px); /* 9 стовпчиків */
+  gap: 1px;
+  background-color: #444; /* Колір тонких ліній */
+  border: 3px solid var(--neon-mint); /* Товста зовнішня рамка */
+  box-shadow: var(--glow);
+}
+
+.cell {
+  width: 45px;
+  height: 45px;
+  background-color: var(--bg-color);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+/* Робимо жирні лінії між секторами 3х3 */
+.cell:nth-child(3n) {
+  border-right: 2px solid var(--neon-mint);
+}
+.cell:nth-child(9n) {
+  border-right: none;
+}
+.cell:nth-of-type(n + 19):nth-of-type(-n + 27),
+.cell:nth-of-type(n + 46):nth-of-type(-n + 54) {
+  border-bottom: 2px solid var(--neon-mint);
+}
+.new-game-btn {
+    display: block;
+  border-radius: 45px;
+  fill: rgba(0, 0, 0, 0);
+  box-shadow: inset 0 0 0px 0 #12242f;
+  background-color: var(--neon-mint);
+  width: 200px;
+  height: 50px;
+  justify-content: center;
+  margin-top: 20px;
+}
