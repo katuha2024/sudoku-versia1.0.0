@@ -1,64 +1,167 @@
 :root {
   --bg-color: #1e1e1e;
   --neon-mint: #99f6e4;
+  --error-peach: #ff7e67;
   --text-white: #ffffff;
   --glow: 0 0 10px rgba(153, 246, 228, 0.4);
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-color); /* Ось тут магія темного фону */
+  background-color: var(--bg-color);
   color: var(--text-white);
   font-family: "Inter", sans-serif;
   display: flex;
+  flex-direction: column; /* Додано для вертикального вирівнювання заголовка та гри */
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
+
 .neon-title {
   color: var(--neon-mint);
   text-shadow: var(--glow);
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(9, 45px); /* 9 стовпчиків */
-  gap: 1px;
-  background-color: #444; /* Колір тонких ліній */
-  border: 3px solid var(--neon-mint); /* Товста зовнішня рамка */
+  grid-template-columns: repeat(9, 45px);
+  background-color: #444; 
+  border: 3px solid var(--neon-mint);
   box-shadow: var(--glow);
+  width: 406px;
+  height: 411px;
+  margin: 20px auto; 
 }
 
 .cell {
   width: 45px;
   height: 45px;
   background-color: var(--bg-color);
-  display: grid;
+  border: 0.5px solid #444; /* Тонкі лінії між звичайними клітинками */
+  display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box; 
 }
 
-/* Робимо жирні лінії між секторами 3х3 */
+
+
 .cell:nth-child(3n) {
   border-right: 2px solid var(--neon-mint);
 }
 .cell:nth-child(9n) {
-  border-right: none;
+  border-right: none; 
 }
+
+/* Горизонтальні лінії */
 .cell:nth-of-type(n + 19):nth-of-type(-n + 27),
 .cell:nth-of-type(n + 46):nth-of-type(-n + 54) {
   border-bottom: 2px solid var(--neon-mint);
 }
+
+/* --- СТАН КЛІТИНКИ --- */
+
+/* Підсвітка при натисканні (isSelected) */
+.cell.active {
+  background-color: rgba(153, 246, 228, 0.2) !important;
+  outline: 2px solid var(--neon-mint);
+  box-shadow: inset 0 0 12px var(--neon-mint);
+  z-index: 10;
+}
+
+/* Підсвітка помилок (conflicts) */
+.cell.error {
+  color: var(--error-peach) !important;
+  background-color: rgba(255, 126, 103, 0.1) !important;
+  text-shadow: 0 0 8px var(--error-peach);
+}
+
+/* Цифри від користувача */
+.cell.user-input {
+  color: var(--neon-mint);
+}
+
+/* Початкові цифри (незмінні) */
+.cell.initial {
+  font-weight: bold;
+  color: var(--text-white);
+}
+
+/* --- КНОПКА NEW GAME --- */
 .new-game-btn {
-    display: block;
+  display: block;
   border-radius: 45px;
-  fill: rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 0px 0 #12242f;
+  border: none;
   background-color: var(--neon-mint);
   width: 200px;
   height: 50px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--bg-color);
+  cursor: pointer;
+  margin: 20px auto 0;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.new-game-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--neon-mint);
+}
+.number-pad {
+  display: flex;
+  gap: 10px;
   justify-content: center;
-  margin-top: 20px;
+  flex-wrap: wrap;
+  max-width: 450px;
+  margin: 20px auto;
+  min-height: 60px; /* Резервуємо місце, щоб сітка не сіпалася */
+}
+
+.pad-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--neon-mint);
+  background: transparent;
+  color: var(--neon-mint);
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Плавність для всього */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 5px rgba(153, 246, 228, 0.2);
+}
+
+.pad-btn:hover {
+  background-color: var(--neon-mint);
+  color: var(--bg-color);
+  box-shadow: 0 0 15px var(--neon-mint);
+}
+
+/* Стиль для кнопки-стерки */
+.erase-btn {
+  border-color: var(--error-peach);
+  color: var(--error-peach);
+}
+
+.erase-btn:hover {
+  background-color: var(--error-peach);
+  color: var(--bg-color);
+  box-shadow: 0 0 15px var(--error-peach);
+}
+
+/* Анімація зникнення заповнених цифр */
+.pad-btn.hidden {
+  opacity: 0;
+  transform: scale(0.5); /* Кнопка ніби згортається */
+  pointer-events: none;
+  visibility: hidden;
 }
