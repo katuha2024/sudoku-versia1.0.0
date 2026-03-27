@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { generateNewGame } from "./logica/sudokuLogic";
-import { Lightbulb } from "lucide-react"; // Імпортуємо іконку лампочки
+import { Lightbulb } from "lucide-react";
 import "./index.css";
 
 function App() {
@@ -8,18 +8,23 @@ function App() {
   const [userGrid, setUserGrid] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const [conflicts, setConflicts] = useState([]);
-  
+  const [difficulty, setDifficulty] = useState("easy");
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
-  const startNewGame = useCallback((difficulty = "easy") => {
-    const newGame = generateNewGame(difficulty);
+  // Стан для показу меню складності
+  const [showDifficultyMenu, setShowDifficultyMenu] = useState(false);
+
+  const startNewGame = useCallback((level = "easy") => {
+    const newGame = generateNewGame(level);
     setGame(newGame);
+    setDifficulty(level);
     setUserGrid(Array(9).fill().map(() => Array(9).fill(null)));
     setSelectedCell(null);
     setConflicts([]);
     setSeconds(0);
     setIsActive(true);
+    setShowDifficultyMenu(false); // Закриваємо меню після вибору
   }, []);
 
   useEffect(() => {
@@ -85,11 +90,9 @@ function App() {
   const handleHint = () => {
     if (!selectedCell || !game) return;
     const { row, col } = selectedCell;
-
     if (game.puzzle[row][col] !== null || userGrid[row][col] === game.solution[row][col]) return;
 
     const correctValue = game.solution[row][col];
-    
     const newGrid = userGrid.map((r, rIdx) =>
       rIdx === row ? r.map((c, cIdx) => (cIdx === col ? correctValue : c)) : r
     );
@@ -182,7 +185,6 @@ function App() {
             </button>
           );
         })}
-        {/* Кнопка-лампочка замість текстової HINT */}
         <button 
           className="pad-btn hint-icon-btn" 
           onClick={handleHint}
@@ -192,7 +194,32 @@ function App() {
         </button>
       </div>
 
-      <button className="new-game-btn" onClick={() => startNewGame()}>New Game</button>
+      {/* Контейнер для кнопки та вибору складності */}
+      <div className="game-controls">
+        {!showDifficultyMenu ? (
+          <button className="new-game-btn" onClick={() => setShowDifficultyMenu(true)}>
+            New Game
+          </button>
+        ) : (
+          <div className="difficulty-picker-overlay">
+            <p>Select Difficulty:</p>
+            <div className="difficulty-options">
+              {["easy", "medium", "hard"].map((level) => (
+                <button
+                  key={level}
+                  className="diff-choice-btn"
+                  onClick={() => startNewGame(level)}
+                >
+                  {level}
+                </button>
+              ))}
+            </div>
+            <button className="cancel-btn" onClick={() => setShowDifficultyMenu(false)}>
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

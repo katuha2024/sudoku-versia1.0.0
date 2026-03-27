@@ -151,3 +151,103 @@ body {
   transform: scale(1.05);
   box-shadow: 0 0 20px var(--neon-mint);
 }
+/* --- 4. МЕНЮ ВИБОРУ СКЛАДНОСТІ --- */
+
+.game-controls {
+  margin-top: 25px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 140px; /* Зарезервоване місце, щоб контент не "стрибав" при появі меню */
+}
+
+/* Контейнер вибору складності */
+.difficulty-picker-overlay {
+  background: rgba(30, 30, 30, 0.95);
+  border: 2px solid var(--neon-mint);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 0 25px rgba(153, 246, 228, 0.3);
+  width: 90vw;
+  max-width: 320px;
+  animation: slideUp 0.3s ease-out; /* Плавна поява знизу */
+}
+
+.difficulty-picker-overlay p {
+  margin: 0;
+  color: var(--neon-mint);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+}
+
+/* Ряд з кнопками Easy, Medium, Hard */
+.difficulty-options {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.diff-choice-btn {
+  flex: 1; /* Кнопки однакової ширини */
+  background: transparent;
+  border: 1px solid var(--neon-mint);
+  color: var(--neon-mint);
+  padding: 10px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.diff-choice-btn:hover {
+  background: rgba(153, 246, 228, 0.1);
+  box-shadow: 0 0 15px var(--neon-mint);
+  transform: translateY(-2px);
+}
+
+/* Кнопка Cancel */
+.cancel-btn {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.cancel-btn:hover {
+  color: var(--error-peach);
+}
+
+/* --- ДОДАТКОВІ СТИЛІ ДЛЯ ЛАМПОЧКИ (якщо ще не додані) --- */
+.hint-icon-btn {
+  border-color: #fcd34d !important;
+  color: #fcd34d !important;
+}
+
+.hint-icon-btn:hover {
+  box-shadow: 0 0 15px #fcd34d;
+  background-color: rgba(252, 211, 77, 0.1);
+}
+
+/* Анімація появи меню */
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
