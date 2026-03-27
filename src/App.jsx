@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { generateNewGame } from "./logica/sudokuLogic";
+import { Lightbulb } from "lucide-react"; // Імпортуємо іконку лампочки
 import "./index.css";
 
 function App() {
@@ -7,6 +8,9 @@ function App() {
   const [userGrid, setUserGrid] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
   const [conflicts, setConflicts] = useState([]);
+  
+  const [seconds, setSeconds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
 
   const startNewGame = useCallback((difficulty = "easy") => {
     const newGame = generateNewGame(difficulty);
@@ -14,13 +18,30 @@ function App() {
     setUserGrid(Array(9).fill().map(() => Array(9).fill(null)));
     setSelectedCell(null);
     setConflicts([]);
+    setSeconds(0);
+    setIsActive(true);
   }, []);
 
   useEffect(() => {
     startNewGame();
   }, [startNewGame]);
 
-  // Рахуємо кількість кожної цифри на полі для панелі вводу
+  useEffect(() => {
+    let interval = null;
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isActive]);
+
+  const formatTime = (time) => {
+    const mins = Math.floor(time / 60);
+    const secs = time % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
   const completedNumbers = useMemo(() => {
     if (!game) return {};
     const counts = {};
@@ -61,25 +82,48 @@ function App() {
     setConflicts(newConflicts);
   };
 
+  const handleHint = () => {
+    if (!selectedCell || !game) return;
+    const { row, col } = selectedCell;
+
+    if (game.puzzle[row][col] !== null || userGrid[row][col] === game.solution[row][col]) return;
+
+    const correctValue = game.solution[row][col];
+    
+    const newGrid = userGrid.map((r, rIdx) =>
+      rIdx === row ? r.map((c, cIdx) => (cIdx === col ? correctValue : c)) : r
+    );
+    
+    setUserGrid(newGrid);
+    checkAllConflicts(newGrid, game.puzzle);
+    setSeconds((prev) => prev + 15); 
+  };
+
   const updateCellValue = useCallback((value) => {
     if (!selectedCell || !game) return;
     const { row, col } = selectedCell;
     if (game.puzzle[row][col] !== null) return;
 
-    // Якщо ми намагаємося ввести цифру, яка вже завершена, ігноруємо (для клавіатури)
-    if (value !== null && completedNumbers[value] >= 9) return;
+    const currentValue = userGrid[row][col];
+    const newValue = currentValue === value ? null : value;
+
+    if (newValue !== null && completedNumbers[newValue] >= 9) return;
 
     const newGrid = userGrid.map((r, rowIndex) => 
-      rowIndex === row ? r.map((c, colIndex) => colIndex === col ? value : c) : r
+      rowIndex === row ? r.map((c, colIndex) => colIndex === col ? newValue : c) : r
     );
     setUserGrid(newGrid);
     checkAllConflicts(newGrid, game.puzzle);
 
     const isComplete = newGrid.every((r, rIdx) => 
-      r.every((c, cIdx) => (game.puzzle[rIdx][cIdx] || c) === game.solution[rIdx][cIdx])
+      r.every((c, cIdx) => (game.puzzle[rIdx][cIdx] || (c !== null ? c : 0)) === game.solution[rIdx][cIdx])
     );
-    if (isComplete) alert("Вітаємо! Ви розв'язали Судоку! 🎉");
-  }, [selectedCell, userGrid, game, completedNumbers]);
+    
+    if (isComplete) {
+      setIsActive(false);
+      alert(`Вітаємо! Ви розв'язали Судоку за ${formatTime(seconds)}! 🎉`);
+    }
+  }, [selectedCell, userGrid, game, completedNumbers, seconds]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -90,13 +134,17 @@ function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [updateCellValue]);
 
-  if (!game) return <div className="loading" role="alert">Генерація...</div>;
+  if (!game) return <div className="loading">Генерація...</div>;
+
+  const activeCellValue = selectedCell ? (game.puzzle[selectedCell.row][selectedCell.col] || userGrid[selectedCell.row][selectedCell.col]) : null;
 
   return (
     <div className="game-container">
       <h1 className="neon-title">SUDOKU NEON</h1>
       
-      <div className="sudoku-grid" role="grid">
+      <div className="timer">{formatTime(seconds)}</div>
+      
+      <div className="sudoku-grid">
         {game.puzzle.map((row, rowIndex) => (
           row.map((cell, colIndex) => {
             const isInitial = cell !== null;
@@ -121,10 +169,12 @@ function App() {
       <div className="number-pad">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
           const isDone = completedNumbers[num] >= 9;
+          const isCurrentActive = activeCellValue === num;
+          
           return (
             <button 
               key={num} 
-              className={`pad-btn ${isDone ? 'hidden' : ''}`} 
+              className={`pad-btn ${isDone ? 'hidden' : ''} ${isCurrentActive ? 'active-num' : ''}`} 
               onClick={() => !isDone && updateCellValue(num)}
               disabled={isDone}
             >
@@ -132,7 +182,14 @@ function App() {
             </button>
           );
         })}
-        <button className="pad-btn erase-btn" onClick={() => updateCellValue(null)}>✕</button>
+        {/* Кнопка-лампочка замість текстової HINT */}
+        <button 
+          className="pad-btn hint-icon-btn" 
+          onClick={handleHint}
+          title="Підказка (+15 сек)"
+        >
+          <Lightbulb size={24} />
+        </button>
       </div>
 
       <button className="new-game-btn" onClick={() => startNewGame()}>New Game</button>

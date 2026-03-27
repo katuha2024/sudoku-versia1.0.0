@@ -6,94 +6,132 @@
   --glow: 0 0 10px rgba(153, 246, 228, 0.4);
 }
 
+/* --- 1. БАЗОВІ СТИЛІ (Mobile First) --- */
 body {
   margin: 0;
   background-color: var(--bg-color);
   color: var(--text-white);
   font-family: "Inter", sans-serif;
   display: flex;
-  flex-direction: column; /* Додано для вертикального вирівнювання заголовка та гри */
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  padding: 10px;
 }
 
 .neon-title {
   color: var(--neon-mint);
   text-shadow: var(--glow);
   text-align: center;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  margin: 20px 0;
 }
 
+/* Гнучка сітка для мобілок */
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(9, 45px);
+  grid-template-columns: repeat(9, 1fr);
+  width: 90vw; 
+  height: 90vw;
+  max-width: 405px;
+  max-height: 405px;
   background-color: #444; 
   border: 3px solid var(--neon-mint);
   box-shadow: var(--glow);
-  width: 406px;
-  height: 411px;
-  margin: 20px auto; 
+  margin: 10px auto; 
 }
 
 .cell {
-  width: 45px;
-  height: 45px;
+  width: 100%;
+  height: 100%;
   background-color: var(--bg-color);
-  border: 0.5px solid #444; /* Тонкі лінії між звичайними клітинками */
+  border: 0.5px solid #444;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.2s ease;
   box-sizing: border-box; 
 }
 
-
-
-.cell:nth-child(3n) {
-  border-right: 2px solid var(--neon-mint);
-}
-.cell:nth-child(9n) {
-  border-right: none; 
-}
-
-/* Горизонтальні лінії */
+/* Товсті лінії для блоків 3х3 */
+.cell:nth-child(3n) { border-right: 2px solid var(--neon-mint); }
+.cell:nth-child(9n) { border-right: none; }
 .cell:nth-of-type(n + 19):nth-of-type(-n + 27),
 .cell:nth-of-type(n + 46):nth-of-type(-n + 54) {
   border-bottom: 2px solid var(--neon-mint);
 }
 
-/* --- СТАН КЛІТИНКИ --- */
-
-/* Підсвітка при натисканні (isSelected) */
-.cell.active {
-  background-color: rgba(153, 246, 228, 0.2) !important;
-  outline: 2px solid var(--neon-mint);
-  box-shadow: inset 0 0 12px var(--neon-mint);
-  z-index: 10;
+/* Кнопки в ДВА РЯДИ на всіх екранах */
+.number-pad {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 95vw;
+  max-width: 320px; /* Обмежуємо ширину, щоб вони стали у 2 ряди (5+4) */
+  margin: 20px auto;
 }
 
-/* Підсвітка помилок (conflicts) */
+.pad-btn {
+  flex: 0 0 calc(20% - 10px); /* 5 кнопок в ряд */
+  aspect-ratio: 1 / 1; /* Робимо їх квадратними */
+  min-width: 45px;
+  border-radius: 10px;
+  border: 1px solid var(--neon-mint);
+  background: transparent;
+  color: var(--neon-mint);
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- 2. СТИЛІ ДЛЯ ВЕЛИКИХ ЕКРАНІВ (Desktop) --- */
+@media (min-width: 768px) {
+  .neon-title {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+
+  .sudoku-grid {
+    grid-template-columns: repeat(9, 45px); /* Фіксований розмір на ПК */
+    width: 406px;
+    height: 406px;
+  }
+
+  .cell {
+    font-size: 1.2rem;
+  }
+}
+
+/* --- 3. КЛАСИ СТАНІВ (Спільні) --- */
+.cell.active {
+  background-color: rgba(153, 246, 228, 0.2) !important;
+  box-shadow: inset 0 0 12px var(--neon-mint);
+}
+
 .cell.error {
   color: var(--error-peach) !important;
-  background-color: rgba(255, 126, 103, 0.1) !important;
   text-shadow: 0 0 8px var(--error-peach);
 }
 
-/* Цифри від користувача */
-.cell.user-input {
-  color: var(--neon-mint);
+.cell.user-input { color: var(--neon-mint); }
+.cell.initial { font-weight: bold; color: var(--text-white); }
+
+.pad-btn.active-num {
+  background-color: var(--neon-mint);
+  color: var(--bg-color);
+  box-shadow: 0 0 15px var(--neon-mint);
+  transform: scale(1.1);
 }
 
-/* Початкові цифри (незмінні) */
-.cell.initial {
-  font-weight: bold;
-  color: var(--text-white);
-}
+.pad-btn.hidden { display: none; }
 
-/* --- КНОПКА NEW GAME --- */
 .new-game-btn {
   display: block;
   border-radius: 45px;
@@ -105,63 +143,11 @@ body {
   font-size: 1rem;
   color: var(--bg-color);
   cursor: pointer;
-  margin: 20px auto 0;
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin: 10px auto 30px;
+  transition: all 0.2s;
 }
 
 .new-game-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 20px var(--neon-mint);
-}
-.number-pad {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 450px;
-  margin: 20px auto;
-  min-height: 60px; /* Резервуємо місце, щоб сітка не сіпалася */
-}
-
-.pad-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--neon-mint);
-  background: transparent;
-  color: var(--neon-mint);
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease; /* Плавність для всього */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 0 5px rgba(153, 246, 228, 0.2);
-}
-
-.pad-btn:hover {
-  background-color: var(--neon-mint);
-  color: var(--bg-color);
-  box-shadow: 0 0 15px var(--neon-mint);
-}
-
-/* Стиль для кнопки-стерки */
-.erase-btn {
-  border-color: var(--error-peach);
-  color: var(--error-peach);
-}
-
-.erase-btn:hover {
-  background-color: var(--error-peach);
-  color: var(--bg-color);
-  box-shadow: 0 0 15px var(--error-peach);
-}
-
-/* Анімація зникнення заповнених цифр */
-.pad-btn.hidden {
-  opacity: 0;
-  transform: scale(0.5); /* Кнопка ніби згортається */
-  pointer-events: none;
-  visibility: hidden;
 }
