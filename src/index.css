@@ -1,12 +1,14 @@
 :root {
-  --bg-color: #1e1e1e;
+  --bg-color: #0d0d0d;
   --neon-mint: #99f6e4;
+  --neon-blue: #00f2ff;
+  --neon-pink: #ff00e0;
   --error-peach: #ff7e67;
   --text-white: #ffffff;
-  --glow: 0 0 10px rgba(153, 246, 228, 0.4);
+  --glow-mint: 0 0 15px rgba(153, 246, 228, 0.4);
+  --glow-blue: 0 0 15px rgba(0, 242, 255, 0.4);
 }
 
-/* --- 1. БАЗОВІ СТИЛІ (Mobile First) --- */
 body {
   margin: 0;
   background-color: var(--bg-color);
@@ -16,238 +18,165 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 10px;
+  overflow-x: hidden;
 }
 
-.neon-title {
-  color: var(--neon-mint);
-  text-shadow: var(--glow);
-  text-align: center;
-  font-size: 1.8rem;
-  margin: 20px 0;
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  perspective: 1000px;
 }
 
-/* Гнучка сітка для мобілок */
-.sudoku-grid {
+.splash-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  width: 90vw; 
-  height: 90vw;
-  max-width: 405px;
-  max-height: 405px;
-  background-color: #444; 
-  border: 3px solid var(--neon-mint);
-  box-shadow: var(--glow);
-  margin: 10px auto; 
-}
-
-.cell {
-  width: 100%;
-  height: 100%;
-  background-color: var(--bg-color);
-  border: 0.5px solid #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-sizing: border-box; 
-}
-
-/* Товсті лінії для блоків 3х3 */
-.cell:nth-child(3n) { border-right: 2px solid var(--neon-mint); }
-.cell:nth-child(9n) { border-right: none; }
-.cell:nth-of-type(n + 19):nth-of-type(-n + 27),
-.cell:nth-of-type(n + 46):nth-of-type(-n + 54) {
-  border-bottom: 2px solid var(--neon-mint);
-}
-
-/* Кнопки в ДВА РЯДИ на всіх екранах */
-.number-pad {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  width: 95vw;
-  max-width: 320px; /* Обмежуємо ширину, щоб вони стали у 2 ряди (5+4) */
-  margin: 20px auto;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 40px;
 }
 
-.pad-btn {
-  flex: 0 0 calc(20% - 10px); /* 5 кнопок в ряд */
-  aspect-ratio: 1 / 1; /* Робимо їх квадратними */
-  min-width: 45px;
-  border-radius: 10px;
-  border: 1px solid var(--neon-mint);
-  background: transparent;
-  color: var(--neon-mint);
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.splash-cube {
+  width: 40px;
+  height: 40px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  opacity: 0;
+  /* Плавна 3D анімація */
+  animation: smoothAssemble 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* --- 2. СТИЛІ ДЛЯ ВЕЛИКИХ ЕКРАНІВ (Desktop) --- */
-@media (min-width: 768px) {
-  .neon-title {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-  }
+/* Координати для плавного зльоту */
+.cube-0 { --tx: -250px; --ty: -250px; --rot: -180deg; animation-delay: 0.1s; border-color: var(--neon-blue); }
+.cube-1 { --tx: 0px;    --ty: -300px; --rot: -90deg;  animation-delay: 0.2s; }
+.cube-2 { --tx: 250px;  --ty: -250px; --rot: 180deg;  animation-delay: 0.3s; border-color: var(--neon-pink); }
+.cube-3 { --tx: -300px; --ty: 0px;    --rot: -90deg;  animation-delay: 0.4s; }
+.cube-4 { --tx: 0px;    --ty: 0px;    --rot: 0deg;    animation-delay: 1s; background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); border: none; }
+.cube-5 { --tx: 300px;  --ty: 0px;    --rot: 90deg;   animation-delay: 0.5s; }
+.cube-6 { --tx: -250px; --ty: 250px;  --rot: -180deg; animation-delay: 0.6s; border-color: #7000ff; }
+.cube-7 { --tx: 0px;    --ty: 300px;  --rot: 90deg;   animation-delay: 0.7s; }
+.cube-8 { --tx: 250px;  --ty: 250px;  --rot: 180deg;  animation-delay: 0.8s; border-color: var(--neon-blue); }
 
-  .sudoku-grid {
-    grid-template-columns: repeat(9, 45px); /* Фіксований розмір на ПК */
-    width: 406px;
-    height: 406px;
-  }
-
-  .cell {
-    font-size: 1.2rem;
-  }
+@keyframes smoothAssemble {
+  0% { opacity: 0; transform: translate3d(var(--tx), var(--ty), -400px) rotateX(var(--rot)) rotateY(var(--rot)) scale(0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1); }
 }
 
-/* --- 3. КЛАСИ СТАНІВ (Спільні) --- */
-.cell.active {
-  background-color: rgba(153, 246, 228, 0.2) !important;
-  box-shadow: inset 0 0 12px var(--neon-mint);
+.splash-logo {
+  color: #fff;
+  font-size: 2.2rem;
+  letter-spacing: 5px;
+  font-weight: 800;
+  opacity: 0;
+  animation: fadeInLogo 1s ease-out 1.5s forwards;
 }
 
-.cell.error {
-  color: var(--error-peach) !important;
-  text-shadow: 0 0 8px var(--error-peach);
+@keyframes fadeInLogo {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.cell.user-input { color: var(--neon-mint); }
-.cell.initial { font-weight: bold; color: var(--text-white); }
-
-.pad-btn.active-num {
-  background-color: var(--neon-mint);
-  color: var(--bg-color);
-  box-shadow: 0 0 15px var(--neon-mint);
-  transform: scale(1.1);
-}
-
-.pad-btn.hidden { display: none; }
-
-.new-game-btn {
-  display: block;
-  border-radius: 45px;
-  border: none;
-  background-color: var(--neon-mint);
-  width: 200px;
-  height: 50px;
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--bg-color);
-  cursor: pointer;
-  margin: 10px auto 30px;
-  transition: all 0.2s;
-}
-
-.new-game-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px var(--neon-mint);
-}
-/* --- 4. МЕНЮ ВИБОРУ СКЛАДНОСТІ --- */
-
-.game-controls {
-  margin-top: 25px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  min-height: 140px; /* Зарезервоване місце, щоб контент не "стрибав" при появі меню */
-}
-
-/* Контейнер вибору складності */
-.difficulty-picker-overlay {
-  background: rgba(30, 30, 30, 0.95);
-  border: 2px solid var(--neon-mint);
-  border-radius: 20px;
-  padding: 20px;
+/* --- ГОЛОВНЕ МЕНЮ --- */
+.main-menu {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 0 25px rgba(153, 246, 228, 0.3);
-  width: 90vw;
-  max-width: 320px;
-  animation: slideUp 0.3s ease-out; /* Плавна поява знизу */
+  justify-content: center;
+  height: 90vh;
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.difficulty-picker-overlay p {
+.main-title {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #fff;
   margin: 0;
-  color: var(--neon-mint);
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.9rem;
+  letter-spacing: -2px;
 }
 
-/* Ряд з кнопками Easy, Medium, Hard */
-.difficulty-options {
+.dot {
+  color: var(--neon-blue);
+  text-shadow: 0 0 15px var(--neon-blue);
+}
+
+.hero-subtitle {
+  color: #666;
+  margin-bottom: 50px;
+  font-size: 1.1rem;
+}
+
+.menu-options {
   display: flex;
-  gap: 10px;
-  width: 100%;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.diff-choice-btn {
-  flex: 1; /* Кнопки однакової ширини */
-  background: transparent;
-  border: 1px solid var(--neon-mint);
-  color: var(--neon-mint);
-  padding: 10px 5px;
-  border-radius: 10px;
+.menu-btn {
+  width: 280px;
+  padding: 18px;
+  background: #161616;
+  border: 1px solid #222;
+  color: white;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  text-transform: capitalize;
-  font-weight: bold;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.diff-choice-btn:hover {
-  background: rgba(153, 246, 228, 0.1);
-  box-shadow: 0 0 15px var(--neon-mint);
+.play-btn {
+  background: var(--neon-blue);
+  color: #000;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: 800;
+  box-shadow: var(--glow-blue);
+}
+
+.play-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px var(--neon-blue);
+}
+
+.menu-btn:not(.play-btn):hover {
+  background: #222;
+  border-color: #444;
   transform: translateY(-2px);
 }
 
-/* Кнопка Cancel */
-.cancel-btn {
-  background: transparent;
-  border: none;
-  color: #888;
-  cursor: pointer;
-  font-size: 0.85rem;
-  text-decoration: underline;
-  padding: 5px;
-  transition: color 0.2s;
+.current-level {
+  color: var(--neon-blue);
+  text-transform: uppercase;
+  margin-left: 5px;
 }
 
-.cancel-btn:hover {
-  color: var(--error-peach);
+/* --- ЗАГАЛЬНІ АНІМАЦІЇ --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- ДОДАТКОВІ СТИЛІ ДЛЯ ЛАМПОЧКИ (якщо ще не додані) --- */
-.hint-icon-btn {
-  border-color: #fcd34d !important;
-  color: #fcd34d !important;
+.fade-in-content {
+  animation: fadeIn 0.6s ease-in;
 }
 
-.hint-icon-btn:hover {
-  box-shadow: 0 0 15px #fcd34d;
-  background-color: rgba(252, 211, 77, 0.1);
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* Анімація появи меню */
-@keyframes slideUp {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px) scale(0.95); 
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
-  }
+.loading {
+  color: var(--neon-mint);
+  margin-top: 50vh;
+  transform: translateY(-50%);
+  font-weight: bold;
+  letter-spacing: 2px;
 }

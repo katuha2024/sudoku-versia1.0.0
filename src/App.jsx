@@ -1,225 +1,163 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { generateNewGame } from "./logica/sudokuLogic";
-import { Lightbulb } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
+import Grid from "./components/Grid/Grid";
+import NumberPad from "./components/NumberPad/NumberPad";
+import DifficultyMenu from "./components/DifficultyMenu/DifficultyMenu";
+import Timer from "./components/Timer/Timer";
+import StatsModal from "./components/StatsModal/StatsModal"; 
+import { useSudokuGame } from "./hooks/useSudokuGame";
 import "./index.css";
 
 function App() {
-  const [game, setGame] = useState(null);
-  const [userGrid, setUserGrid] = useState([]);
-  const [selectedCell, setSelectedCell] = useState(null);
-  const [conflicts, setConflicts] = useState([]);
-  const [difficulty, setDifficulty] = useState("easy");
-  const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-
-  // Стан для показу меню складності
+  const [isSplashing, setIsSplashing] = useState(true); // Новий стан для заставки
+  const [isGameStarted, setIsGameStarted] = useState(false);
   const [showDifficultyMenu, setShowDifficultyMenu] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false); 
+  
+  const {
+    game, userGrid, selectedCell, setSelectedCell, conflicts, seconds,
+    updateCellValue, handleHint, startNewGame, completedNumbers, isWon, hintsLeft
+  } = useSudokuGame();
 
-  const startNewGame = useCallback((level = "easy") => {
-    const newGame = generateNewGame(level);
-    setGame(newGame);
-    setDifficulty(level);
-    setUserGrid(Array(9).fill().map(() => Array(9).fill(null)));
-    setSelectedCell(null);
-    setConflicts([]);
-    setSeconds(0);
-    setIsActive(true);
-    setShowDifficultyMenu(false); // Закриваємо меню після вибору
+  // Логіка Splash Screen (заставка на 3 секунди)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSplashing(false);
+    }, 3000);
+    return () => clearTimeout(timer);
   }, []);
 
+  // Ефект конфеті при переможі
   useEffect(() => {
-    startNewGame();
-  }, [startNewGame]);
+    if (isWon) {
+      const end = Date.now() + 4 * 1000; 
+      const colors = ["#00f2ff", "#7000ff", "#ff00e0"]; 
 
-  useEffect(() => {
-    let interval = null;
-    if (isActive) {
-      interval = setInterval(() => {
-        setSeconds((prev) => prev + 1);
-      }, 1000);
+      (function frame() {
+        confetti({
+          particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: colors,
+        });
+        confetti({
+          particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: colors,
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
     }
-    return () => clearInterval(interval);
-  }, [isActive]);
-
-  const formatTime = (time) => {
-    const mins = Math.floor(time / 60);
-    const secs = time % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const completedNumbers = useMemo(() => {
-    if (!game) return {};
-    const counts = {};
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        const val = game.puzzle[r][c] !== null ? game.puzzle[r][c] : userGrid[r][c];
-        if (val) counts[val] = (counts[val] || 0) + 1;
-      }
-    }
-    return counts;
-  }, [game, userGrid]);
-
-  const checkAllConflicts = (grid, puzzle) => {
-    const newConflicts = [];
-    const getVal = (r, c) => puzzle[r][c] !== null ? puzzle[r][c] : grid[r][c];
-
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        const val = getVal(r, c);
-        if (val === null) continue;
-        let hasConflict = false;
-
-        for (let i = 0; i < 9; i++) {
-          if (i !== c && getVal(r, i) === val) hasConflict = true;
-          if (i !== r && getVal(i, c) === val) hasConflict = true;
-        }
-
-        const startR = Math.floor(r / 3) * 3;
-        const startC = Math.floor(c / 3) * 3;
-        for (let i = startR; i < startR + 3; i++) {
-          for (let j = startC; j < startC + 3; j++) {
-            if ((i !== r || j !== c) && getVal(i, j) === val) hasConflict = true;
-          }
-        }
-        if (hasConflict) newConflicts.push(`${r}-${c}`);
-      }
-    }
-    setConflicts(newConflicts);
-  };
-
-  const handleHint = () => {
-    if (!selectedCell || !game) return;
-    const { row, col } = selectedCell;
-    if (game.puzzle[row][col] !== null || userGrid[row][col] === game.solution[row][col]) return;
-
-    const correctValue = game.solution[row][col];
-    const newGrid = userGrid.map((r, rIdx) =>
-      rIdx === row ? r.map((c, cIdx) => (cIdx === col ? correctValue : c)) : r
-    );
-    
-    setUserGrid(newGrid);
-    checkAllConflicts(newGrid, game.puzzle);
-    setSeconds((prev) => prev + 15); 
-  };
-
-  const updateCellValue = useCallback((value) => {
-    if (!selectedCell || !game) return;
-    const { row, col } = selectedCell;
-    if (game.puzzle[row][col] !== null) return;
-
-    const currentValue = userGrid[row][col];
-    const newValue = currentValue === value ? null : value;
-
-    if (newValue !== null && completedNumbers[newValue] >= 9) return;
-
-    const newGrid = userGrid.map((r, rowIndex) => 
-      rowIndex === row ? r.map((c, colIndex) => colIndex === col ? newValue : c) : r
-    );
-    setUserGrid(newGrid);
-    checkAllConflicts(newGrid, game.puzzle);
-
-    const isComplete = newGrid.every((r, rIdx) => 
-      r.every((c, cIdx) => (game.puzzle[rIdx][cIdx] || (c !== null ? c : 0)) === game.solution[rIdx][cIdx])
-    );
-    
-    if (isComplete) {
-      setIsActive(false);
-      alert(`Вітаємо! Ви розв'язали Судоку за ${formatTime(seconds)}! 🎉`);
-    }
-  }, [selectedCell, userGrid, game, completedNumbers, seconds]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key >= "1" && e.key <= "9") updateCellValue(parseInt(e.key));
-      else if (e.key === "Backspace" || e.key === "Delete") updateCellValue(null);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [updateCellValue]);
+  }, [isWon]);
 
   if (!game) return <div className="loading">Генерація...</div>;
 
-  const activeCellValue = selectedCell ? (game.puzzle[selectedCell.row][selectedCell.col] || userGrid[selectedCell.row][selectedCell.col]) : null;
+  // 1. ВИВІД SPLASH SCREEN
+  if (isSplashing) {
+    return (
+      <div className="splash-screen">
+        <div className="splash-grid">
+          {[...Array(9)].map((_, i) => (
+            <div key={i} className={`splash-cube cube-${i}`}></div>
+          ))}
+        </div>
+        <h1 className="splash-logo">sudoku<span className="dot">.</span>neon</h1>
+      </div>
+    );
+  }
 
+  // 2. ОСНОВНИЙ КОНТЕНТ
   return (
-    <div className="game-container">
-      <h1 className="neon-title">SUDOKU NEON</h1>
-      
-      <div className="timer">{formatTime(seconds)}</div>
-      
-      <div className="sudoku-grid">
-        {game.puzzle.map((row, rowIndex) => (
-          row.map((cell, colIndex) => {
-            const isInitial = cell !== null;
-            const userValue = userGrid[rowIndex][colIndex];
-            const isSelected = selectedCell?.row === rowIndex && selectedCell?.col === colIndex;
-            const isError = conflicts.includes(`${rowIndex}-${colIndex}`);
-            const cellValue = isInitial ? cell : (userValue || "");
-
-            return (
-              <div 
-                key={`${rowIndex}-${colIndex}`} 
-                className={`cell ${isInitial ? 'initial' : 'user-input'} ${isSelected ? 'active' : ''} ${isError ? 'error' : ''}`}
-                onClick={() => setSelectedCell({ row: rowIndex, col: colIndex })}
-              >
-                {cellValue}
-              </div>
-            );
-          })
-        ))}
-      </div>
-
-      <div className="number-pad">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
-          const isDone = completedNumbers[num] >= 9;
-          const isCurrentActive = activeCellValue === num;
-          
-          return (
-            <button 
-              key={num} 
-              className={`pad-btn ${isDone ? 'hidden' : ''} ${isCurrentActive ? 'active-num' : ''}`} 
-              onClick={() => !isDone && updateCellValue(num)}
-              disabled={isDone}
-            >
-              {num}
-            </button>
-          );
-        })}
-        <button 
-          className="pad-btn hint-icon-btn" 
-          onClick={handleHint}
-          title="Підказка (+15 сек)"
-        >
-          <Lightbulb size={24} />
-        </button>
-      </div>
-
-      {/* Контейнер для кнопки та вибору складності */}
-      <div className="game-controls">
-        {!showDifficultyMenu ? (
-          <button className="new-game-btn" onClick={() => setShowDifficultyMenu(true)}>
-            New Game
-          </button>
-        ) : (
-          <div className="difficulty-picker-overlay">
-            <p>Select Difficulty:</p>
-            <div className="difficulty-options">
-              {["easy", "medium", "hard"].map((level) => (
-                <button
-                  key={level}
-                  className="diff-choice-btn"
-                  onClick={() => startNewGame(level)}
-                >
-                  {level}
-                </button>
+    <div className="game-container fade-in-content">
+      {!isGameStarted ? (
+        /* --- ГОЛОВНА СТОРІНКА --- */
+        <div className="main-menu">
+          <div className="menu-illustration">
+            <div className="mini-grid">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className={`mini-cell cell-${i}`}></div>
               ))}
             </div>
-            <button className="cancel-btn" onClick={() => setShowDifficultyMenu(false)}>
-              Cancel
+          </div>
+          
+          <div className="hero-section">
+            <h1 className="main-title">
+              sudoku<span className="dot">.</span>neon
+            </h1>
+            <p className="hero-subtitle">Solve puzzles. Master your mind.</p>
+          </div>
+
+          <div className="menu-options">
+            <button className="menu-btn play-btn" onClick={() => setIsGameStarted(true)}>
+              PLAY NOW
+            </button>
+
+            <button className="menu-btn" onClick={() => setShowDifficultyMenu(true)}>
+              LEVEL: <span className="current-level">{game.difficulty}</span>
+            </button>
+
+            <button className="menu-btn" onClick={() => setIsStatsOpen(true)}>
+              STATISTICS
             </button>
           </div>
-        )}
-      </div>
+          
+          {showDifficultyMenu && (
+            <div className="difficulty-overlay">
+               <DifficultyMenu 
+                onSelect={(level) => {
+                  startNewGame(level);
+                  setShowDifficultyMenu(false);
+                }} 
+                onCancel={() => setShowDifficultyMenu(false)} 
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        /* --- ІГРОВИЙ ЕКРАН --- */
+        <div className="game-screen">
+          <div className="game-header">
+             <button className="back-btn" onClick={() => setIsGameStarted(false)}>
+               ← MENU
+             </button>
+             <Timer seconds={seconds} />
+             <div className="stats-icon" onClick={() => setIsStatsOpen(true)}>🏆</div>
+          </div>
+
+          <Grid 
+            puzzle={game.puzzle}
+            userGrid={userGrid}
+            selectedCell={selectedCell}
+            conflicts={conflicts}
+            onCellClick={setSelectedCell}
+          />
+
+          <NumberPad 
+            completedNumbers={completedNumbers}
+            onNumberClick={updateCellValue}
+            onHintClick={handleHint}
+            hintsLeft={hintsLeft} 
+          />
+
+          <div className="game-footer">
+            <button className="restart-btn" onClick={() => startNewGame(game.difficulty)}>
+              Restart
+            </button>
+          </div>
+        </div>
+      )}
+
+      <StatsModal isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} />
+
+      {isWon && (
+        <div className="win-overlay">
+          <div className="win-modal">
+            <h2 className="neon-text-win">🎉 VICTORY! 🎉</h2>
+            <p>Time: {Math.floor(seconds / 60)}:{(seconds % 60).toString().padStart(2, '0')}</p>
+            <button className="new-game-btn" onClick={() => {
+              startNewGame(game.difficulty);
+              setIsGameStarted(false);
+            }}>
+              Main Menu
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

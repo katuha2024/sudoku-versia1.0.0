@@ -1,0 +1,46 @@
+.numberPad {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 400px;
+}
+
+.padBtn {
+  width: 45px;
+  height: 45px;
+  background: rgba(153, 246, 228, 0.05);
+  border: 1px solid var(--neon-mint);
+  color: var(--neon-mint);
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.padBtn:hover {
+  background: rgba(153, 246, 228, 0.2);
+  box-shadow: 0 0 15px var(--neon-mint);
+  transform: translateY(-2px);
+}
+
+.active {
+  background: var(--neon-mint) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 0 20px var(--neon-mint);
+}
+
+.hintBtn {
+  border-color: #ffb3ba; /* Рожевий неон для підказки */
+  color: #ffb3ba;
+}
+
+.hidden {
+  opacity: 0.1;
+  pointer-events: none;
+}

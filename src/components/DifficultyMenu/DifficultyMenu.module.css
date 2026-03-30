@@ -1,0 +1,79 @@
+/* src/components/DifficultyMenu/DifficultyMenu.module.css */
+
+.overlay {
+  background: rgba(30, 30, 30, 0.95);
+  border: 2px solid var(--neon-mint);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 0 25px rgba(153, 246, 228, 0.3);
+  width: 90vw;
+  max-width: 320px;
+  animation: slideUp 0.3s ease-out;
+}
+
+.title {
+  margin: 0;
+  color: var(--neon-mint);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.options {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.diffBtn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--neon-mint);
+  color: var(--neon-mint);
+  padding: 10px 5px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: capitalize;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.diffBtn:hover {
+  background: rgba(153, 246, 228, 0.1);
+  box-shadow: 0 0 15px var(--neon-mint);
+  transform: translateY(-2px);
+}
+
+.cancelBtn {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 5px;
+  transition: color 0.2s;
+  margin-top: 5px;
+}
+
+.cancelBtn:hover {
+  color: var(--error-peach);
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px) scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
