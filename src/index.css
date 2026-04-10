@@ -180,3 +180,25 @@ body {
   font-weight: bold;
   letter-spacing: 2px;
 }
+.game-btn {
+  background: #161616;
+  color: var(--neon-mint);
+  border: 1px solid var(--neon-mint);
+  padding: 8px 20px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px rgba(153, 246, 228, 0.2);
+  margin: 10px;
+}
+
+/* Ефект при наведенні */
+.game-btn:hover {
+  background: var(--neon-mint);
+  color: #000;
+  box-shadow: var(--glow); /* Твоє фірмове сяйво */
+  transform: translateY(-2px);
+}
