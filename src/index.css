@@ -1,204 +1,216 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
-  --bg-color: #0d0d0d;
-  --neon-mint: #99f6e4;
-  --neon-blue: #00f2ff;
-  --neon-pink: #ff00e0;
-  --error-peach: #ff7e67;
-  --text-white: #ffffff;
-  --glow-mint: 0 0 15px rgba(153, 246, 228, 0.4);
-  --glow-blue: 0 0 15px rgba(0, 242, 255, 0.4);
+  --bg-color: #070a14;
+  --surface: #0f1629;
+  --surface-soft: #131d35;
+  --text-white: #ecf2ff;
+  --text-muted: #a6b2d0;
+  --neon-mint: #4ef2cc;
+  --neon-blue: #5ca8ff;
+  --neon-pink: #f173ff;
+  --error-peach: #ff8297;
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --shadow-xl: 0 20px 45px rgba(3, 7, 18, 0.5);
+  --glow: 0 0 20px rgba(78, 242, 204, 0.35);
+  --glow-blue: 0 0 20px rgba(92, 168, 255, 0.35);
+
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: var(--text-white);
+  background: radial-gradient(circle at 20% 0%, #182748 0%, var(--bg-color) 60%);
 }
 
 body {
   margin: 0;
-  background-color: var(--bg-color);
-  color: var(--text-white);
-  font-family: "Inter", sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   min-height: 100vh;
   overflow-x: hidden;
+  color: var(--text-white);
+  background: transparent;
 }
 
+#root {
+  min-height: 100vh;
+}
+
+.loading,
+.splash-screen {
+  min-height: calc(100vh - 78px);
+  display: grid;
+  place-items: center;
+}
 
 .splash-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg-color);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  perspective: 1000px;
-}
-
-.splash-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  width: 140px;
-  height: 140px;
-  margin-bottom: 40px;
-}
-
-.splash-cube {
-  width: 40px;
-  height: 40px;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
-  opacity: 0;
-  /* Плавна 3D анімація */
-  animation: smoothAssemble 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* Координати для плавного зльоту */
-.cube-0 { --tx: -250px; --ty: -250px; --rot: -180deg; animation-delay: 0.1s; border-color: var(--neon-blue); }
-.cube-1 { --tx: 0px;    --ty: -300px; --rot: -90deg;  animation-delay: 0.2s; }
-.cube-2 { --tx: 250px;  --ty: -250px; --rot: 180deg;  animation-delay: 0.3s; border-color: var(--neon-pink); }
-.cube-3 { --tx: -300px; --ty: 0px;    --rot: -90deg;  animation-delay: 0.4s; }
-.cube-4 { --tx: 0px;    --ty: 0px;    --rot: 0deg;    animation-delay: 1s; background: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); border: none; }
-.cube-5 { --tx: 300px;  --ty: 0px;    --rot: 90deg;   animation-delay: 0.5s; }
-.cube-6 { --tx: -250px; --ty: 250px;  --rot: -180deg; animation-delay: 0.6s; border-color: #7000ff; }
-.cube-7 { --tx: 0px;    --ty: 300px;  --rot: 90deg;   animation-delay: 0.7s; }
-.cube-8 { --tx: 250px;  --ty: 250px;  --rot: 180deg;  animation-delay: 0.8s; border-color: var(--neon-blue); }
-
-@keyframes smoothAssemble {
-  0% { opacity: 0; transform: translate3d(var(--tx), var(--ty), -400px) rotateX(var(--rot)) rotateY(var(--rot)) scale(0); }
-  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg) scale(1); }
+  background: radial-gradient(circle at center, #13254f 0%, #080d1d 70%);
 }
 
 .splash-logo {
-  color: #fff;
-  font-size: 2.2rem;
-  letter-spacing: 5px;
-  font-weight: 800;
-  opacity: 0;
-  animation: fadeInLogo 1s ease-out 1.5s forwards;
-}
-
-@keyframes fadeInLogo {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- ГОЛОВНЕ МЕНЮ --- */
-.main-menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 90vh;
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.main-title {
-  font-size: 4rem;
-  font-weight: 800;
-  color: #fff;
   margin: 0;
-  letter-spacing: -2px;
+  font-size: clamp(2rem, 7vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  font-family: "Orbitron", "Inter", sans-serif;
 }
 
-.dot {
-  color: var(--neon-blue);
-  text-shadow: 0 0 15px var(--neon-blue);
+.splash-logo span {
+  color: var(--neon-mint);
 }
 
-.hero-subtitle {
-  color: #666;
-  margin-bottom: 50px;
-  font-size: 1.1rem;
-}
-
-.menu-options {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.menu-btn {
-  width: 280px;
-  padding: 18px;
-  background: #161616;
-  border: 1px solid #222;
-  color: white;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.play-btn {
-  background: var(--neon-blue);
-  color: #000;
-  border: none;
-  font-size: 1.2rem;
-  font-weight: 800;
-  box-shadow: var(--glow-blue);
-}
-
-.play-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 30px var(--neon-blue);
-}
-
-.menu-btn:not(.play-btn):hover {
-  background: #222;
-  border-color: #444;
-  transform: translateY(-2px);
-}
-
-.current-level {
-  color: var(--neon-blue);
-  text-transform: uppercase;
-  margin-left: 5px;
-}
-
-/* --- ЗАГАЛЬНІ АНІМАЦІЇ --- */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+.game-container {
+  padding: 14px 12px 28px;
 }
 
 .fade-in-content {
-  animation: fadeIn 0.6s ease-in;
+  animation: fadeIn 0.45s ease-out;
+}
+
+.game-main-area {
+  width: min(940px, 100%);
+  margin: 0 auto;
+  background: linear-gradient(160deg, rgba(19, 29, 53, 0.94), rgba(9, 14, 28, 0.9));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-xl);
+  border-radius: 18px;
+  padding: 16px 12px;
+}
+
+.welcome-section {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.hero-text h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+}
+
+.hero-text p {
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.big-neon-btn,
+.new-game-btn {
+  margin-top: 18px;
+  width: 100%;
+  max-width: 320px;
+  padding: 13px 20px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: linear-gradient(120deg, var(--neon-blue), var(--neon-mint));
+  color: #041024;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.big-neon-btn:hover,
+.new-game-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glow-blue);
+}
+
+.sudoku-play-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.game-status-bar {
+  width: min(406px, 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.difficulty-tag {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--neon-blue);
+  border: 1px solid rgba(92, 168, 255, 0.45);
+  background: rgba(12, 26, 56, 0.7);
+}
+
+.difficulty-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 4, 10, 0.7);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 3000;
+  padding: 20px;
+}
+
+.main-title,
+.neon-title {
+  font-family: "Orbitron", "Inter", sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.main-title {
+  margin: 0;
+}
+
+.neon-title {
+  margin: 0 0 16px;
+}
+
+@media (min-width: 768px) {
+  .game-container {
+    padding: 28px 16px 40px;
+  }
+
+  .game-main-area {
+    border-radius: 24px;
+    padding: 24px 18px;
+  }
+
+  .welcome-section {
+    padding: 18px 0;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .big-neon-btn,
+  .new-game-btn {
+    width: auto;
+    max-width: none;
+    padding: 12px 28px;
+  }
+
+  .game-status-bar {
+    width: min(406px, 90vw);
+    gap: 12px;
+  }
+
+  .difficulty-tag {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.loading {
-  color: var(--neon-mint);
-  margin-top: 50vh;
-  transform: translateY(-50%);
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-.game-btn {
-  background: #161616;
-  color: var(--neon-mint);
-  border: 1px solid var(--neon-mint);
-  padding: 8px 20px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 5px rgba(153, 246, 228, 0.2);
-  margin: 10px;
-}
-
-/* Ефект при наведенні */
-.game-btn:hover {
-  background: var(--neon-mint);
-  color: #000;
-  box-shadow: var(--glow); /* Твоє фірмове сяйво */
-  transform: translateY(-2px);
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

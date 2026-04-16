@@ -2,48 +2,67 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
 }
 
+.calendar_wrapper {
+  width: 100%;
+  max-width: 380px;
+}
 
 :global(.react-calendar) {
-  background: #161616 !important;
-  border: 1px solid var(--neon-blue) !important;
-  border-radius: 12px;
-  font-family: 'Inter', sans-serif;
-  color: white !important;
-  box-shadow: var(--glow-blue);
-  width: 350px !important;
+  background: linear-gradient(170deg, #121b34, #0d152a) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 16px !important;
+  font-family: "Inter", sans-serif !important;
+  color: var(--text-white) !important;
+  box-shadow: var(--shadow-xl);
+  width: 100% !important;
+  padding: 8px;
 }
 
 :global(.react-calendar__navigation button) {
-  color: var(--neon-mint) !important;
-  font-weight: bold;
+  color: var(--text-white) !important;
+  font-weight: 700;
+  border-radius: 10px;
 }
 
 :global(.react-calendar__month-view__weekdays__weekday) {
-  color: #666 !important;
+  color: var(--text-muted) !important;
   text-decoration: none !important;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 :global(.react-calendar__tile) {
-  color: white !important;
-  padding: 15px !important;
+  color: var(--text-white) !important;
+  padding: 10px 2px !important;
+  border-radius: 10px;
 }
 
 :global(.react-calendar__tile--now) {
-  background: transparent !important;
-  border: 1px solid var(--neon-pink) !important;
+  background: rgba(241, 115, 255, 0.08) !important;
+  border: 1px solid rgba(241, 115, 255, 0.5) !important;
   color: var(--neon-pink) !important;
 }
 
 :global(.react-calendar__tile--active) {
-  background: var(--neon-blue) !important;
-  color: black !important;
+  background: linear-gradient(130deg, var(--neon-blue), var(--neon-mint)) !important;
+  color: #071123 !important;
   box-shadow: var(--glow-blue);
 }
 
 :global(.react-calendar__tile:enabled:hover) {
-  background: #222 !important;
-  border-color: var(--neon-mint) !important;
+  background: rgba(92, 168, 255, 0.17) !important;
+}
+
+.completedDay {
+  background: rgba(78, 242, 204, 0.2) !important;
+  border: 1px solid rgba(78, 242, 204, 0.45) !important;
+}
+
+@media (min-width: 768px) {
+  :global(.react-calendar__tile) {
+    padding: 12px 4px !important;
+  }
 }

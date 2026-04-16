@@ -2,37 +2,39 @@
   width: 100%;
   height: 100%;
   background-color: var(--bg-color);
-  border: 0.5px solid #444;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.08rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.12s ease, color 0.2s ease;
   box-sizing: border-box;
 }
 
 /* Стан: число було в пазлі спочатку */
 .initial {
-  font-weight: bold;
+  font-weight: 700;
   color: var(--text-white);
 }
 
 /* Стан: число введене користувачем */
 .userInput {
-  color: var(--neon-mint);
+  color: #87f6de;
 }
 
 /* Стан: активна (вибрана) клітинка */
 .active {
-  background-color: rgba(153, 246, 228, 0.2) !important;
-  box-shadow: inset 0 0 12px var(--neon-mint);
+  background: rgba(92, 168, 255, 0.2) !important;
+  box-shadow: inset 0 0 0 1px rgba(92, 168, 255, 0.7);
+  transform: scale(1.01);
 }
 
 /* Стан: помилка (конфлікт) */
 .error {
   color: var(--error-peach) !important;
-  text-shadow: 0 0 8px var(--error-peach);
+  text-shadow: 0 0 10px rgba(255, 130, 151, 0.65);
 }
 
 /* Для десктопної версії */

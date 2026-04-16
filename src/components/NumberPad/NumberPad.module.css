@@ -1,21 +1,21 @@
 .numberPad {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin: 20px auto;
-  max-width: 400px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px auto 4px;
+  width: min(100%, 406px);
 }
 
 .padBtn {
-  width: 45px;
-  height: 45px;
-  background: rgba(153, 246, 228, 0.05);
-  border: 1px solid var(--neon-mint);
-  color: var(--neon-mint);
-  border-radius: 8px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-height: 44px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-white);
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -23,24 +23,59 @@
   justify-content: center;
 }
 
+@media (min-width: 768px) {
+  .numberPad {
+    gap: 10px;
+    width: min(406px, 90vw);
+  }
+
+  .padBtn {
+    min-height: 48px;
+  }
+}
+
 .padBtn:hover {
-  background: rgba(153, 246, 228, 0.2);
-  box-shadow: 0 0 15px var(--neon-mint);
-  transform: translateY(-2px);
+  background: rgba(92, 168, 255, 0.18);
+  box-shadow: 0 10px 22px rgba(8, 14, 30, 0.45);
+  transform: translateY(-1px);
 }
 
 .active {
-  background: var(--neon-mint) !important;
-  color: #1a1a1a !important;
-  box-shadow: 0 0 20px var(--neon-mint);
+  background: linear-gradient(130deg, var(--neon-blue), var(--neon-mint)) !important;
+  color: #081322 !important;
+  border-color: transparent;
+  box-shadow: var(--glow-blue);
 }
 
 .hintBtn {
-  border-color: #ffb3ba; /* Рожевий неон для підказки */
-  color: #ffb3ba;
+  border-color: rgba(241, 115, 255, 0.5);
+  color: var(--neon-pink);
+  position: relative;
 }
 
 .hidden {
-  opacity: 0.1;
+  opacity: 0.22;
   pointer-events: none;
+}
+
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.hintBadge {
+  position: absolute;
+  right: 6px;
+  top: 5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(241, 115, 255, 0.18);
+  color: var(--neon-pink);
+  font-size: 0.7rem;
+  font-weight: 700;
 }

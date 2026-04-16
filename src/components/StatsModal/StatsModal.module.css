@@ -4,77 +4,63 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(4, 7, 16, 0.74);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  padding: 16px;
 }
 
 .modal {
-  background: #0d0d0d;
-  border: 2px solid #00f2ff;
-  box-shadow:
-    0 0 20px #00f2ff,
-    inset 0 0 10px #00f2ff;
+  background: linear-gradient(170deg, #151f3a, #0d152a);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 38px rgba(3, 6, 17, 0.6);
   border-radius: 20px;
-  padding: 30px;
-  width: 300px;
-  text-align: center;
-  color: #fff;
+  padding: 24px;
+  width: min(360px, 100%);
+  color: var(--text-white);
 }
 
-.title {
-  color: #ff00e0;
-  text-shadow: 0 0 10px #ff00e0;
-  margin-bottom: 25px;
-}
-
-.statMain {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
+.statLine {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
 }
 
 .value {
-  color: #00f2ff;
-  font-weight: bold;
+  color: var(--neon-mint);
+  font-weight: 700;
 }
 
-.bestTimes h3 {
-  font-size: 1rem;
-  color: #7000ff;
-  margin-bottom: 15px;
-  text-transform: uppercase;
+.divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  margin: 14px 0;
 }
 
-.timeRow {
+.levelRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
   margin-bottom: 10px;
-  font-size: 0.9rem;
 }
 
-.timeValue {
-  color: #00f2ff;
+.levelRow span:last-child {
+  color: var(--text-white);
+  font-weight: 700;
 }
 
-.closeBtn {
-  margin-top: 25px;
-  background: transparent;
-  border: 1px solid #ff00e0;
-  color: #ff00e0;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.closeBtn:hover {
-  background: #ff00e0;
-  color: #fff;
-  box-shadow: 0 0 15px #ff00e0;
+.modal h3 {
+  margin: 0 0 12px;
+  font-size: 0.86rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--neon-blue);
 }

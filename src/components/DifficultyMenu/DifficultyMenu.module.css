@@ -1,27 +1,25 @@
-/* src/components/DifficultyMenu/DifficultyMenu.module.css */
-
 .overlay {
-  background: rgba(30, 30, 30, 0.95);
-  border: 2px solid var(--neon-mint);
+  background: linear-gradient(165deg, #151e35, #0e162c);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 20px;
-  padding: 20px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 0 25px rgba(153, 246, 228, 0.3);
+  gap: 14px;
+  box-shadow: 0 20px 40px rgba(2, 6, 18, 0.55);
   width: 90vw;
-  max-width: 320px;
+  max-width: 340px;
   animation: slideUp 0.3s ease-out;
 }
 
 .title {
   margin: 0;
-  color: var(--neon-mint);
-  font-weight: bold;
+  color: var(--text-white);
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  font-size: 0.88rem;
   text-align: center;
 }
 
@@ -33,28 +31,28 @@
 
 .diffBtn {
   flex: 1;
-  background: transparent;
-  border: 1px solid var(--neon-mint);
-  color: var(--neon-mint);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-white);
   padding: 10px 5px;
   border-radius: 10px;
   cursor: pointer;
   text-transform: capitalize;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 0.9rem;
   transition: all 0.2s ease;
 }
 
 .diffBtn:hover {
-  background: rgba(153, 246, 228, 0.1);
-  box-shadow: 0 0 15px var(--neon-mint);
+  background: rgba(92, 168, 255, 0.18);
+  box-shadow: 0 8px 22px rgba(6, 10, 24, 0.5);
   transform: translateY(-2px);
 }
 
 .cancelBtn {
   background: transparent;
   border: none;
-  color: #888;
+  color: var(--text-muted);
   cursor: pointer;
   font-size: 0.85rem;
   text-decoration: underline;
@@ -64,7 +62,7 @@
 }
 
 .cancelBtn:hover {
-  color: var(--error-peach);
+  color: var(--neon-pink);
 }
 
 @keyframes slideUp {

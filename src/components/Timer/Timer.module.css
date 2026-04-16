@@ -1,9 +1,9 @@
-/* src/components/Timer/Timer.module.css */
 .timer {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 2rem;
-  color: var(--neon-mint);
-  text-shadow: var(--glow);
-  margin-bottom: 10px;
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+  color: var(--text-white);
+  margin-bottom: 6px;
   text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }

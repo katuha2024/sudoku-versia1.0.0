@@ -1,34 +1,37 @@
 .sudokuGrid {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  width: 90vw; 
-  height: 90vw;
-  max-width: 405px;
-  max-height: 405px;
-  background-color: #444; 
-  border: 3px solid var(--neon-mint);
-  box-shadow: var(--glow);
-  margin: 10px auto; 
+  width: min(100%, 406px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  max-width: 406px;
+  max-height: none;
+  background: linear-gradient(160deg, #151b30, #0f1629);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  box-shadow: var(--shadow-xl);
+  margin: 10px auto;
+  overflow: hidden;
 }
 
-/* Товсті лінії для блоків 3х3 */
-.sudokuGrid > div:nth-child(3n) { 
-  border-right: 2px solid var(--neon-mint); 
+.sudokuGrid > div:nth-child(3n) {
+  border-right: 1.5px solid rgba(92, 168, 255, 0.45);
 }
 
-.sudokuGrid > div:nth-child(9n) { 
-  border-right: none; 
+.sudokuGrid > div:nth-child(9n) {
+  border-right: none;
 }
 
 .sudokuGrid > div:nth-of-type(n + 19):nth-of-type(-n + 27),
 .sudokuGrid > div:nth-of-type(n + 46):nth-of-type(-n + 54) {
-  border-bottom: 2px solid var(--neon-mint);
+  border-bottom: 1.5px solid rgba(92, 168, 255, 0.45);
 }
 
 @media (min-width: 768px) {
   .sudokuGrid {
-    grid-template-columns: repeat(9, 45px); 
+    grid-template-columns: repeat(9, 45px);
     width: 406px;
     height: 406px;
+    aspect-ratio: auto;
   }
 }
