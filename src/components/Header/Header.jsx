@@ -4,19 +4,20 @@ import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom"; // Додали навігацію всередину
 import styles from "./Header.module.css";
 
-const Header = ({ user }) => {
+const Header = ({ user, onMenuAction }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Функція для зміни режиму гри через URL
-  const handleAction = (mode) => {
-    navigate(`/?mode=${mode}`);
+  // Централізована передача дій у глобальний стан гри
+  const handleAction = (action) => {
+    navigate("/");
+    if (onMenuAction) onMenuAction(action);
     setIsMenuOpen(false);
   };
 
   return (
     <header className={styles.header}>
-      <div className={styles.logo} onClick={() => navigate("/")}>
+      <div className={styles.logo} onClick={() => handleAction("HOME")}>
         sudoku<span>.</span>neon
       </div>
 
@@ -28,10 +29,10 @@ const Header = ({ user }) => {
           
           {isMenuOpen && (
             <div className={styles.dropContent} onMouseLeave={() => setIsMenuOpen(false)}>
-              <button onClick={() => handleAction('play')}>PLAY NOW</button>
-              <button onClick={() => handleAction('daily')}>DAILY CHALLENGE</button>
-              <button onClick={() => handleAction('stats')}>STATISTICS</button>
-              <button onClick={() => handleAction('level')}>CHANGE LEVEL</button>
+              <button onClick={() => handleAction("PLAY")}>PLAY NOW</button>
+              <button onClick={() => handleAction("DAILY")}>DAILY CHALLENGE</button>
+              <button onClick={() => handleAction("STATS")}>STATISTICS</button>
+              <button onClick={() => handleAction("LEVEL")}>CHANGE LEVEL</button>
             </div>
           )}
         </div>

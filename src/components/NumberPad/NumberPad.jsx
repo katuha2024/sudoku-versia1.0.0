@@ -2,7 +2,7 @@ import { Lightbulb } from "lucide-react";
 import styles from "./NumberPad.module.css";
 
 // Додаємо hintsLeft у деструктуризацію пропсів
-const NumberPad = ({ completedNumbers, activeCellValue, onNumberClick, onHintClick, hintsLeft }) => {
+const NumberPad = ({ completedNumbers, activeCellValue, onNumberClick, onHintClick, hintsLeft, disabled = false }) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
@@ -15,7 +15,7 @@ const NumberPad = ({ completedNumbers, activeCellValue, onNumberClick, onHintCli
             key={num}
             className={`${styles.padBtn} ${activeCellValue === num ? styles.active : ""} ${isDone ? styles.hidden : ""}`}
             onClick={() => onNumberClick(num)}
-            disabled={isDone}
+            disabled={isDone || disabled}
           >
             {num}
           </button>
@@ -24,9 +24,9 @@ const NumberPad = ({ completedNumbers, activeCellValue, onNumberClick, onHintCli
       
       {/* Кнопка підказки з лічильником */}
       <button 
-        className={`${styles.padBtn} ${styles.hintBtn} ${hintsLeft === 0 ? styles.disabled : ""}`} 
+        className={`${styles.padBtn} ${styles.hintBtn} ${hintsLeft === 0 || disabled ? styles.disabled : ""}`} 
         onClick={onHintClick}
-        disabled={hintsLeft === 0} // Кнопка перестає натискатися, якщо підказок 0
+        disabled={hintsLeft === 0 || disabled} // Кнопка перестає натискатися, якщо підказок 0
       >
         <Lightbulb size={20} />
         {/* Відображаємо кількість підказок, якщо вони є */}

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { generateNewGame, getConflicts } from "../logica/sudokuLogic";
 
 export const useSudokuGame = () => {
+  const maxMistakes = 3;
   const [game, setGame] = useState(() => generateNewGame("easy"));
   const [userGrid, setUserGrid] = useState(() => 
     Array(9).fill().map(() => Array(9).fill(null))
@@ -11,6 +12,8 @@ export const useSudokuGame = () => {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(true);
   const [isWon, setIsWon] = useState(false);
+  const [isLost, setIsLost] = useState(false);
+  const [mistakes, setMistakes] = useState(0);
   const [hintsLeft, setHintsLeft] = useState(10);
 
   // --- ЛОГІКА СТАТИСТИКИ ---
@@ -42,6 +45,8 @@ export const useSudokuGame = () => {
     setSeconds(0);
     setIsActive(true);
     setIsWon(false);
+    setIsLost(false);
+    setMistakes(0);
     setHintsLeft(10);
   }, []);
 
@@ -73,7 +78,7 @@ export const useSudokuGame = () => {
   }, [userGrid, conflicts, game, isWon, seconds, saveStats]);
 
   const handleHint = useCallback(() => {
-    if (!selectedCell || !game || isWon || hintsLeft <= 0) return;
+    if (!selectedCell || !game || isWon || isLost || hintsLeft <= 0) return;
     const { row, col } = selectedCell;
     if (game.puzzle[row][col] !== null) return;
     const correctValue = game.solution[row][col];
@@ -86,23 +91,34 @@ export const useSudokuGame = () => {
       return newGrid;
     });
     setHintsLeft((prev) => prev - 1);
-  }, [selectedCell, game, isWon, hintsLeft]);
+  }, [selectedCell, game, isWon, isLost, hintsLeft]);
 
   const updateCellValue = useCallback((value) => {
-    if (!selectedCell || !game || isWon) return;
+    if (!selectedCell || !game || isWon || isLost) return;
     const { row, col } = selectedCell;
     if (game.puzzle[row][col] !== null) return;
     
     setUserGrid((prevGrid) => {
       const currentValue = prevGrid[row][col];
       const newValue = currentValue === value ? null : value;
+      const expectedValue = game.solution[row][col];
+      if (newValue !== null && newValue !== expectedValue) {
+        setMistakes((prev) => {
+          const next = prev + 1;
+          if (next >= maxMistakes) {
+            setIsLost(true);
+            setIsActive(false);
+          }
+          return next;
+        });
+      }
       const newGrid = prevGrid.map((r, rIdx) => 
         rIdx === row ? r.map((c, cIdx) => (cIdx === col ? newValue : c)) : r
       );
       setConflicts(getConflicts(game.puzzle, newGrid));
       return newGrid;
     });
-  }, [selectedCell, game, isWon]);
+  }, [selectedCell, game, isWon, isLost, maxMistakes]);
 
   const completedNumbers = useMemo(() => {
     if (!game) return {};
@@ -118,6 +134,7 @@ export const useSudokuGame = () => {
 
   return {
     game, userGrid, selectedCell, setSelectedCell, conflicts, seconds,
-    updateCellValue, startNewGame, completedNumbers, handleHint, hintsLeft, isWon
+    updateCellValue, startNewGame, completedNumbers, handleHint,
+    hintsLeft, isWon, isLost, mistakes, maxMistakes
   };
 };

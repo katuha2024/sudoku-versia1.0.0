@@ -2,8 +2,19 @@
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
-  margin: 14px auto 4px;
-  width: min(100%, 406px);
+  margin: 0 auto;
+  width: min(calc(100vw - 24px), 406px);
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 8px;
+  z-index: 40;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(8, 13, 28, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .padBtn {
@@ -27,6 +38,18 @@
   .numberPad {
     gap: 10px;
     width: min(406px, 90vw);
+    margin: 14px auto 4px;
+    position: static;
+    left: auto;
+    transform: none;
+    bottom: auto;
+    z-index: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .padBtn {

@@ -26,14 +26,14 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   color: var(--text-white);
   background: transparent;
 }
 
 #root {
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .loading,
@@ -62,6 +62,9 @@ body {
 
 .game-container {
   padding: 14px 12px 28px;
+  padding-bottom: 12px;
+  min-height: calc(100dvh - 64px);
+  overflow: hidden;
 }
 
 .fade-in-content {
@@ -76,6 +79,8 @@ body {
   box-shadow: var(--shadow-xl);
   border-radius: 18px;
   padding: 16px 12px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .welcome-section {
@@ -119,8 +124,9 @@ body {
 .sudoku-play-zone {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   align-items: center;
+  padding-bottom: 116px;
 }
 
 .game-status-bar {
@@ -129,6 +135,16 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+}
+
+.mistakes-tag {
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--error-peach);
+  border: 1px solid rgba(255, 130, 151, 0.45);
+  background: rgba(44, 13, 20, 0.66);
 }
 
 .difficulty-tag {
@@ -154,6 +170,45 @@ body {
   padding: 20px;
 }
 
+.result-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3200;
+  display: grid;
+  place-items: center;
+  background: rgba(4, 7, 16, 0.72);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  padding: 18px;
+}
+
+.result-card {
+  width: min(420px, 100%);
+  background: linear-gradient(165deg, #161f38, #0d162d);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+
+.result-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.result-card p {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+}
+
+.result-actions {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .main-title,
 .neon-title {
   font-family: "Orbitron", "Inter", sans-serif;
@@ -171,11 +226,15 @@ body {
 @media (min-width: 768px) {
   .game-container {
     padding: 28px 16px 40px;
+    min-height: unset;
+    overflow: visible;
   }
 
   .game-main-area {
     border-radius: 24px;
     padding: 24px 18px;
+    height: auto;
+    overflow: visible;
   }
 
   .welcome-section {
@@ -201,6 +260,21 @@ body {
   .difficulty-tag {
     padding: 8px 14px;
     font-size: 0.82rem;
+  }
+
+  .mistakes-tag {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .result-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .sudoku-play-zone {
+    gap: 14px;
+    padding-bottom: 0;
   }
 }
 
