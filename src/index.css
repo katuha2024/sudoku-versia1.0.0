@@ -288,3 +288,38 @@ body {
     transform: translateY(0);
   }
 }
+.coin-reward {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+.neon-coin-icon {
+  width: 24px;
+  height: 24px;
+  background: #ffd166;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 15px #ffd166, inset 0 0 5px rgba(0,0,0,0.3);
+  display: inline-block;
+}
+
+.neon-coin-icon::after {
+  content: '$'; 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #b48a00;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.coin-amount {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffd166;
+  text-shadow: 0 0 10px rgba(255, 209, 102, 0.8);
+}

@@ -11,7 +11,7 @@ import SudokuGame from "./components/SudokuGame/SudokuGame";
 function App() {
   const [user, setUser] = useState(null);
   
-  // Стан для управління грою з хедера
+  
   const [gameState, setGameState] = useState({
     isGameStarted: false,
     isDailyActive: false,
@@ -26,7 +26,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Функція, яку ми віддамо в Header
+  
   const handleMenuAction = (action) => {
     if (action === 'HOME') {
       setGameState({ isGameStarted: false, isDailyActive: false, isStatsOpen: false, showDifficultyMenu: false });

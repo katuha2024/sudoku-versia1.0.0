@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom"; // Додали навігацію всередину
+import { useNavigate } from "react-router-dom"; 
 import styles from "./Header.module.css";
 
 const Header = ({ user, onMenuAction }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Централізована передача дій у глобальний стан гри
+  
   const handleAction = (action) => {
     navigate("/");
     if (onMenuAction) onMenuAction(action);
