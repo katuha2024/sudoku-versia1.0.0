@@ -18,21 +18,18 @@ export const useSudokuGame = () => {
 
   // --- ЛОГІКА СТАТИСТИКИ ---
   const saveStats = useCallback((time, level) => {
-    // Отримуємо існуючу статистику або створюємо дефолтну
     const rawData = localStorage.getItem("sudoku_neon_stats");
     const stats = rawData ? JSON.parse(rawData) : { 
       totalWins: 0, 
       bestTime: { easy: null, medium: null, hard: null } 
     };
 
-    // Оновлюємо дані
     stats.totalWins += 1;
     const currentBest = stats.bestTime[level];
     if (!currentBest || time < currentBest) {
       stats.bestTime[level] = time;
     }
 
-    // Зберігаємо в браузер
     localStorage.setItem("sudoku_neon_stats", JSON.stringify(stats));
   }, []);
 
@@ -50,6 +47,22 @@ export const useSudokuGame = () => {
     setHintsLeft(10);
   }, []);
 
+  // Функція для магічного автозаповнення (додаємо її в хук)
+  const autoFillGrid = useCallback(() => {
+    if (!game?.solution) return;
+    
+    // Створюємо сітку на основі розв'язку:
+    // Беремо цифру з solution лише якщо в puzzle (початковій грі) стояв null
+    const finalGrid = game.solution.map((row, rIdx) => 
+      row.map((cellValue, cIdx) => 
+        game.puzzle[rIdx][cIdx] === null ? cellValue : null
+      )
+    );
+    
+    setUserGrid(finalGrid);
+    setConflicts([]); // Очищуємо конфлікти, бо розв'язок правильний
+  }, [game]);
+
   useEffect(() => {
     let interval = null;
     if (isActive) {
@@ -58,7 +71,6 @@ export const useSudokuGame = () => {
     return () => clearInterval(interval);
   }, [isActive]);
 
-  // Перевірка перемоги з викликом статистики
   useEffect(() => {
     if (!game || isWon) return;
 
@@ -70,7 +82,6 @@ export const useSudokuGame = () => {
       const timer = setTimeout(() => {
         setIsWon(true);
         setIsActive(false);
-        // ЗБЕРЕЖЕННЯ ПЕРЕМОГИ
         saveStats(seconds, game.difficulty || 'easy');
       }, 500);
       return () => clearTimeout(timer);
@@ -133,8 +144,22 @@ export const useSudokuGame = () => {
   }, [game, userGrid]);
 
   return {
-    game, userGrid, selectedCell, setSelectedCell, conflicts, seconds,
-    updateCellValue, startNewGame, completedNumbers, handleHint,
-    hintsLeft, isWon, isLost, mistakes, maxMistakes
+    game, 
+    userGrid, 
+    setUserGrid, // ПОВЕРТАЄМО ФУНКЦІЮ ОНОВЛЕННЯ
+    autoFillGrid, // ПОВЕРТАЄМО ГОТОВУ ЛОГІКУ АВТОЗАПОВНЕННЯ
+    selectedCell, 
+    setSelectedCell, 
+    conflicts, 
+    seconds,
+    updateCellValue, 
+    startNewGame, 
+    completedNumbers, 
+    handleHint,
+    hintsLeft, 
+    isWon, 
+    isLost, 
+    mistakes, 
+    maxMistakes
   };
 };

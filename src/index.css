@@ -100,7 +100,8 @@ body {
 }
 
 .big-neon-btn,
-.new-game-btn {
+.new-game-btn,
+.bonus-btn {
   margin-top: 18px;
   width: 100%;
   max-width: 320px;
@@ -322,4 +323,260 @@ body {
   font-weight: bold;
   color: #ffd166;
   text-shadow: 0 0 10px rgba(255, 209, 102, 0.8);
+}
+/* Універсальний стиль для монетки */
+.neon-coin-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: radial-gradient(circle, #ffe100 0%, #ffb100 100%);
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 10px rgba(255, 225, 0, 0.8);
+  position: relative;
+  margin-right: 8px;
+}
+
+.neon-coin-icon::after {
+  content: '$'; /* Або 'c' (coins) */
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  color: #b17d00;
+}
+.theme-selector {
+  margin-top: 30px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  /* backdrop-filter: blur(5px); */
+}
+
+.theme-selector p {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: var(--primary-neon);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.t-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 8px 20px;
+  margin: 0 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Стиль для активної кнопки */
+.t-btn.active {
+  background: var(--primary-neon);
+  color: #000;
+  box-shadow: 0 0 15px var(--primary-neon);
+  border-color: transparent;
+  font-weight: bold;
+}
+body.theme-gold {
+  --bg-color: #0f0c08; /* Глибокий чорно-коричневий */
+  --primary-neon: #ffd166; /* Золото */
+  --secondary-neon: #f4e4bc; /* Світле золото */
+  --glass-bg: rgba(30, 25, 15, 0.8);
+}
+
+body.theme-gold .big-neon-btn {
+  background: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  background-size: 400% 400%;
+  color: #000;
+  border: none;
+  font-weight: 900;
+  animation: gold-shimmer 5s ease infinite;
+}
+
+@keyframes gold-shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+body.theme-gold .hero-text h2 {
+  background: linear-gradient(to right, #bf953f, #fcf6ba, #aa771c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 5px rgba(255, 209, 102, 0.5));
+}
+@media (max-width: 380px) {
+  .welcome-section {
+    padding: 20px 10px;
+  }
+
+  .hero-text h2 {
+    font-size: 1.6rem; /* Зменшуємо заголовок */
+    line-height: 1.2;
+  }
+
+  .big-neon-btn {
+    width: 100%; 
+    font-size: 1rem;
+  }
+  
+  .menu-actions {
+    flex-direction: column; /* Кнопки одна під одною */
+    gap: 15px;
+  }
+}
+/* Стиль кнопки Daily Bonus */
+
+
+.bonus-btn:hover {
+  background: var(--secondary-neon);
+  color: #000;
+  box-shadow: 0 0 20px var(--secondary-neon);
+  transform: translateY(-2px);
+}
+
+.bonus-btn:active {
+  transform: translateY(0);
+}
+
+/* Ефект сяйва навколо кнопки */
+@keyframes bonus-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 87, 127, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 87, 127, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 87, 127, 0);
+  }
+}
+
+/* Контейнер для кнопок, щоб вони були в ряд або стовпчик */
+.menu-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+
+/* Адаптивність для мобільних */
+@media (max-width: 480px) {
+  .menu-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .bonus-btn, .big-neon-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* --- КОНТЕЙНЕР ДЛЯ AUTO-FILL --- */
+.controls-wrapper {
+  margin-top: 20px;
+  min-height: 180px; /* Щоб інтерфейс не "стрибав", коли зникає NumberPad */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- КНОПКА AUTO-FILL (Магічний блакитний) --- */
+.auto-fill-btn {
+  background: linear-gradient(45deg, #00f2ff, #7000ff) !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 16px 40px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  border-radius: 50px !important; /* Овальна форма */
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
+  transition: all 0.3s ease;
+  animation: auto-glow 1.5s infinite alternate;
+}
+
+.auto-fill-btn:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow: 0 0 35px #00f2ff;
+}
+
+@keyframes auto-glow {
+  from {
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+    filter: brightness(1);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(112, 0, 255, 0.8);
+    filter: brightness(1.2);
+  }
+}
+
+/* --- ОНОВЛЕНІ СТИЛІ ДЛЯ КНОПОК МЕНЮ (WELCOME SCREEN) --- */
+.menu-actions {
+  display: flex;
+  flex-direction: column; /* Кнопки одна під одною для зручності */
+  gap: 20px;
+  align-items: center;
+  margin-top: 40px;
+}
+
+/* Робимо обидві кнопки ідентичними за формою та розміром */
+.big-neon-btn, .bonus-btn {
+  width: 280px; /* Фіксована ширина для симетрії */
+  height: 60px;
+  border-radius: 50px !important; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: none !important;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* START (Зелений) */
+.big-neon-btn {
+  background: var(--primary-neon) !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px var(--primary-neon);
+}
+
+/* DAILY BONUS (Малиновий) */
+.bonus-btn {
+  background: var(--secondary-neon) !important;
+  color: #fff !important;
+  box-shadow: 0 0 20px var(--secondary-neon);
+}
+
+.bonus-btn .bonus-icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+}
+
+/* Ефект при наведенні */
+.big-neon-btn:hover, .bonus-btn:hover {
+  transform: translateY(-3px);
+  filter: contrast(1.2);
+}
+
+/* Адаптивність для зовсім маленьких екранів */
+@media (max-width: 360px) {
+  .big-neon-btn, .bonus-btn {
+    width: 100%;
+    max-width: 260px;
+  }
 }
